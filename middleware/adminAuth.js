@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/user');
 
 // This middleware function is designed to protect routes that should ONLY be accessible by administrators.
 // It should be used AFTER the standard 'auth' middleware.
