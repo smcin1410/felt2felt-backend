@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth'); // Our authentication middleware
 const Post = require('../models/Post');
-const User = require('../models/User');
+const User = require('../models/user');
 
 // --- Helper function to update user points and rank ---
 const updateUserPoints = async (userId, pointsToAdd) => {

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth'); // Import our auth middleware
 const ItineraryItem = require('../models/Itinerary');
-const User = require('../models/User');
+const User = require('../models/user');
 
 // @route   GET api/itinerary
 // @desc    Get all of a user's itinerary items
