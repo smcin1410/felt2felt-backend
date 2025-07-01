@@ -13,7 +13,7 @@ const PostSchema = new Schema({
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'user',
     required: true
   },
   authorEmail: {
@@ -29,7 +29,7 @@ const PostSchema = new Schema({
     type: String
   },
   comments: [{
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'user' },
     authorEmail: { type: String },
     text: { type: String, required: true },
     authorRank: { type: String, default: 'New Hand' }, // Also store rank for commenters

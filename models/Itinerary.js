@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ItineraryItemSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User', // This links the item to a specific user
+    ref: 'user', // This links the item to a specific user
     required: true
   },
   itemType: { // e.g., 'room', 'tournament'

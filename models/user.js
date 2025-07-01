@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
 // If it is, make them an admin.
 UserSchema.pre('save', async function(next) {
   if (this.isNew) {
-    const userCount = await mongoose.model('User', UserSchema).countDocuments();
+    const userCount = await mongoose.model('user', UserSchema).countDocuments();
     if (userCount === 0) {
       this.role = 'admin';
     }
@@ -48,4 +48,4 @@ UserSchema.pre('save', async function(next) {
 });
 
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('user', UserSchema);
