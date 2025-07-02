@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
-const User = require('../models/user'); // <--- lowercase 'u'
+const User = require('../models/user');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -22,7 +22,10 @@ router.post('/register', async (req, res) => {
     const verificationToken = crypto.randomBytes(20).toString('hex');
     user.verificationToken = verificationToken;
     await user.save();
-    const verificationUrl = `http://localhost:5000/api/users/verify/${verificationToken}`;
+    
+    // Using the correct environment variable.
+    const verificationUrl = `${process.env.BACKEND_URL}/api/users/verify/${verificationToken}`;
+    
     const msg = {
       to: user.email,
       from: process.env.FROM_EMAIL,
@@ -47,7 +50,7 @@ router.get('/verify/:token', async (req, res) => {
         user.isVerified = true;
         user.verificationToken = undefined;
         await user.save();
-        res.send('<h1>Email successfully verified!</h1><p>You can now log in to your account.</p>');
+        res.redirect('https://felt2felt.com');
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
@@ -70,11 +73,10 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ msg: 'Incorrect Username and/or Password' });
     }
 
-    // UPDATED: Include the user's role in the JWT payload
     const payload = {
       user: {
         id: user.id,
-        role: user.role // Add the role here
+        role: user.role
       }
     };
 

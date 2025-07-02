@@ -14,6 +14,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// --- DEBUGGING LOGS ---
+// These lines will print to your Render logs on startup to confirm the variables are correct.
+console.log(`--- Server Starting ---`);
+console.log(`BACKEND_URL from environment: ${process.env.BACKEND_URL}`);
+console.log(`Server will run on port: ${PORT}`);
+console.log(`-----------------------`);
+
+
 // --- Connect to MongoDB ---
 mongoose.connect(process.env.DATABASE_URL)
   .then(() => {
@@ -23,7 +31,17 @@ mongoose.connect(process.env.DATABASE_URL)
   .catch(err => console.error('Error connecting to MongoDB Atlas:', err));
 
 // --- Middleware ---
-app.use(cors());
+const allowedOrigins = ['https://felt2felt.com'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // --- Define Routes ---
@@ -38,7 +56,6 @@ app.use('/api/destinations', require('./routes/destinations'));
 app.use('/api/tournaments', require('./routes/tournaments'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/admin', require('./routes/admin'));
-// NEW: Use the city data route
 app.use('/api/citydata', require('./routes/cityData'));
 
 
