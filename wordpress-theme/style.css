@@ -1,0 +1,74 @@
+/* ================================================================ */
+/* START: TRIP DESIGNER-SPECIFIC STYLES */
+/* ================================================================ */
+.trip-designer-container { max-width: 1400px; margin: 0 auto 80px auto; padding: 0 20px; position: relative; }
+.felt-headline { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 700; color: #00FFFF; text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; margin-bottom: 20px; text-align: center; }
+.page-subtitle { text-align: center; color: #b0b0b0; max-width: 600px; margin: 0 auto 40px auto; font-size: 1.1rem; }
+
+/* Page Gating Overlay */
+#page-auth-overlay {
+    position: absolute; top: -40px; left: 0; right: 0; bottom: 0;
+    background-color: rgba(18, 18, 18, 0.95); z-index: 500;
+    display: none; justify-content: center; align-items: center;
+    text-align: center; padding: 40px; border-radius: 15px;
+}
+#page-auth-overlay.visible { display: flex; }
+.auth-prompt { max-width: 500px; }
+.auth-prompt .icon { font-size: 4rem; color: #FF1493; margin-bottom: 20px; }
+.auth-prompt h2 { font-family: 'Poppins', sans-serif; font-size: 2rem; color: #FFFFFF; margin-bottom: 15px; }
+.auth-prompt p { color: #b0b0b0; margin-bottom: 30px; line-height: 1.6; }
+.auth-prompt-btn { display: inline-block; padding: 15px 40px; border: none; background-color: #00FFFF; color: #000000 !important; font-size: 1.2rem; font-weight: 700; border-radius: 5px; cursor: pointer; box-shadow: 0 0 15px #00FFFF; }
+
+.designer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+@media (min-width: 1024px) {
+    .designer-grid { grid-template-columns: 450px 1fr; }
+}
+
+/* --- Controls Column --- */
+.control-group { background-color: #1A1A1A; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+.control-group h3 { font-family: 'Poppins', sans-serif; color: #FFFFFF; margin: 0 0 20px 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+.control-group .icon { color: #00FFFF; }
+.control-group label { display: block; font-weight: 700; margin-bottom: 10px; color: #EAEAEA; }
+.control-group input, .control-group select { width: 100%; padding: 12px; background-color: #333; border: 1px solid #444; border-radius: 8px; color: #FFFFFF; font-size: 1rem; box-sizing: border-box; }
+.control-group select:disabled, .control-group input:disabled { opacity: 0.5; cursor: not-allowed; }
+.input-wrapper { margin-bottom: 15px; }
+
+/* --- Right Column (Summary & Map) --- */
+.summary-map-column { display: flex; flex-direction: column; gap: 30px; }
+#trip-map { height: 400px; width: 100%; border-radius: 15px; background-color: #333; }
+.itinerary-summary { background-color: #1A1A1A; border-radius: 15px; padding: 30px; }
+
+.summary-section { padding-bottom: 25px; margin-bottom: 25px; border-bottom: 1px solid #333; }
+.summary-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.summary-section h3 { font-family: 'Poppins', sans-serif; color: #FFFFFF; margin: 0 0 20px 0; font-size: 1.6rem; }
+.summary-section h3 .icon { color: #00FFFF; }
+
+/* Itinerary Item Lists */
+.itinerary-items-list { list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; }
+.summary-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 5px; border-top: 1px solid #2a2a2a; }
+.summary-item:first-child { border-top: none; }
+.summary-item .item-name { font-weight: 700; }
+.summary-item .item-details { font-size: 0.9rem; color: #b0b0b0; }
+.empty-list-message { color: #888; padding: 10px 0; font-style: italic; }
+.status-message { text-align: center; padding: 40px; font-size: 1.1rem; color: #888; }
+
+/* Tournament Event Checkbox */
+.event-item { display: flex; align-items: center; gap: 15px; padding: 5px 0;}
+.event-item input[type="checkbox"] { width: auto; }
+.event-item label { margin-bottom: 0; font-weight: normal; }
+.event-item .buyin { color: #00FFFF; font-weight: 700; margin-left: auto; }
+
+/* Budget Summary */
+.cost-summary { text-align: right; }
+.cost-item { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1rem; }
+.cost-item .label { color: #b0b0b0; }
+.cost-item .value { font-weight: 700; color: #EAEAEA; }
+.cost-total { margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; }
+.cost-total .label { font-size: 1.5rem; }
+.cost-total .value { font-size: 1.5rem; color: #00FFFF; }
+
+/* Nearby Essentials */
+.essentials-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.essentials-btn { background-color: #333; border: 1px solid #444; color: #EAEAEA; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+.essentials-btn:hover { background-color: #444; }
+#essentials-results { margin-top: 15px; font-size: 0.9rem; color: #b0b0b0; }
