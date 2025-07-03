@@ -1,84 +1,116 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-// Schema for an individual event within a series
-const EventSchema = new Schema({
-  date: { type: String, required: true },
-  eventName: { type: String, required: true },
-  buyin: { type: String, required: true }, // Using String to accommodate bounties, e.g., "$500 + $50"
-  guarantee: { type: String } // e.g., "$1M GTD"
+// This sub-schema defines the structure for a single event within a larger tournament series.
+// It allows for a rich, detailed schedule to be stored directly within the parent tournament document.
+const EventSchema = new mongoose.Schema({
+    eventNumber: {
+        type: String,
+        trim: true
+    },
+    eventName: {
+        type: String,
+        required: [true, 'Event name is required.'],
+        trim: true
+    },
+    date: {
+        type: String, // Using String to accommodate flexible date formats like "Wed 18 - Sat 21 Jun"
+        trim: true
+    },
+    buyin: {
+        type: String, // Using String to handle complex buy-ins like "$700 + 300"
+        trim: true
+    },
+    guarantee: {
+        type: String,
+        trim: true
+    },
+    gameType: {
+        type: String,
+        trim: true,
+        default: 'No Limit Hold\'em'
+    },
+    notes: {
+        type: String,
+        trim: true
+    }
 });
 
-// Schema for the overall tournament series
-const TournamentSeriesSchema = new Schema({
-  seriesName: { type: String, required: true },
-  venue: { type: String, required: true },
-  location: { type: String, required: true },
-  city: { type: String, required: true },
-  country: { type: String, required: true },
-  circuit: { type: String }, // e.g., "WSOP Circuit", "WPT"
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
-  officialSite: { type: String },
-  schedule: [EventSchema] // An array of individual events
+// This is the main schema for the 'tournaments' collection.
+const TournamentSchema = new mongoose.Schema({
+    seriesName: {
+        type: String,
+        required: [true, 'Series name is required.'],
+        trim: true,
+        unique: true // Ensures no duplicate tournament series names are created.
+    },
+    majorCircuit: {
+        type: String,
+        trim: true,
+        // Example circuits. This could be converted to an enum if a strict list is desired.
+        // enum: ['WSOP', 'WPT', 'EPT', 'PGT', 'MSPT', 'Independent']
+    },
+    // venueId is a reference to a specific document in the 'locations' collection.
+    // This creates a direct link between a tournament and where it's held.
+    venueId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location'
+        // Not required, as some series might be online or have no fixed venue initially.
+    },
+    city: {
+        type: String,
+        required: [true, 'City is required.'],
+        trim: true
+    },
+    region: {
+        type: String, // State or Province
+        required: [true, 'Region/State is required.'],
+        trim: true
+    },
+    country: {
+        type: String,
+        required: [true, 'Country is required.'],
+        trim: true
+    },
+    startDate: {
+        type: Date,
+        required: [true, 'Start date is required.']
+    },
+    endDate: {
+        type: Date,
+        required: [true, 'End date is required.']
+    },
+    status: {
+        type: String,
+        enum: ['Upcoming', 'Active', 'Completed'],
+        default: 'Upcoming'
+    },
+    officialSite: {
+        type: String,
+        trim: true
+    },
+    // Tags enable the creation of "meta-series" to group events by theme,
+    // like 'las-vegas-summer-2025', for powerful custom filtering on the frontend.
+    tags: [String],
+    // The schedule field embeds an array of the EventSchema defined above.
+    schedule: [EventSchema]
+}, {
+    // Automatically adds `createdAt` and `updatedAt` fields to the document.
+    timestamps: true
 });
 
-const TournamentSeries = mongoose.model('TournamentSeries', TournamentSeriesSchema);
-
-// Seed the database with initial data if it's empty
-TournamentSeries.countDocuments({}).then(count => {
-  if (count === 0) {
-    console.log('No tournament series found. Seeding initial data...');
-    TournamentSeries.insertMany([
-      {
-        seriesName: "World Series of Poker",
-        venue: "Horseshoe & Paris",
-        location: "Las Vegas, NV",
-        city: "Las Vegas",
-        country: "USA",
-        circuit: "WSOP",
-        startDate: "2025-05-28",
-        endDate: "2025-07-17",
-        officialSite: "https://www.wsop.com",
-        schedule: [
-          { date: "May 28", eventName: "Event #1: Champions Reunion No-Limit Hold'em Freezeout", buyin: "$5,000", guarantee: "$5M" },
-          { date: "May 29", eventName: "Event #3: $500 Kick-Off No-Limit Hold'em Freezeout", buyin: "$500", guarantee: "$1M" },
-          { date: "June 28", eventName: "Event #68: MAIN EVENT No-Limit Hold'em World Championship", buyin: "$10,000", guarantee: "$50M" }
-        ]
-      },
-      {
-        seriesName: "WPT World Championship Festival",
-        venue: "Wynn Las Vegas",
-        location: "Las Vegas, NV",
-        city: "Las Vegas",
-        country: "USA",
-        circuit: "WPT",
-        startDate: "2025-12-03",
-        endDate: "2025-12-20",
-        officialSite: "https://www.wynnpoker.com",
-        schedule: [
-            { date: "Dec 3", eventName: "WPT Prime Championship", buyin: "$1,100", guarantee: "$5M" },
-            { date: "Dec 12", eventName: "WPT World Championship", buyin: "$10,400", guarantee: "$40M" }
-        ]
-      },
-      {
-        seriesName: "Seminole Hard Rock Poker Open",
-        venue: "Seminole Hard Rock",
-        location: "Hollywood, FL",
-        city: "South Florida",
-        country: "USA",
-        circuit: "SHRPO",
-        startDate: "2025-07-24",
-        endDate: "2025-08-06",
-        officialSite: "https://www.shrpo.com",
-        schedule: [
-            { date: "July 24", eventName: "Event #1: $400 Deep Stack NLH", buyin: "$400", guarantee: "$1M" },
-            { date: "Aug 2", eventName: "SHRPO Championship", buyin: "$5,300", guarantee: "$3M" }
-        ]
-      }
-    ]).then(() => console.log('Tournaments seeded!'))
-      .catch(err => console.error('Error seeding tournaments:', err));
-  }
+// Before saving a tournament, this middleware automatically updates its status
+// based on the current date relative to the series start and end dates.
+TournamentSchema.pre('save', function(next) {
+    const now = new Date();
+    if (this.endDate < now) {
+        this.status = 'Completed';
+    } else if (this.startDate <= now && this.endDate >= now) {
+        this.status = 'Active';
+    } else {
+        this.status = 'Upcoming';
+    }
+    next();
 });
 
-module.exports = TournamentSeries;
+
+module.exports = mongoose.model('Tournament', TournamentSchema);
