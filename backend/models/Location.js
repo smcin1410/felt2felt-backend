@@ -80,6 +80,16 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    // NEW: For special hotel rates
+    pokerRateDetails: {
+        type: String,
+        trim: true
+    },
+    // NEW: To track associated rewards programs
+    loyaltyProgram: {
+        type: String,
+        trim: true
+    },
     // The 'details' object nests more specific information about the poker room.
     details: {
         tables: {

@@ -47,7 +47,7 @@ const TournamentSchema = new mongoose.Schema({
         type: String,
         trim: true,
         // Example circuits. This could be converted to an enum if a strict list is desired.
-        // enum: ['WSOP', 'WPT', 'EPT', 'PGT', 'MSPT', 'Independent']
+        enum: ['WSOP', 'WPT', 'EPT', 'PGT', 'MSPT', 'Independent']
     },
     // venueId is a reference to a specific document in the 'locations' collection.
     // This creates a direct link between a tournament and where it's held.
@@ -111,6 +111,5 @@ TournamentSchema.pre('save', function(next) {
     }
     next();
 });
-
 
 module.exports = mongoose.model('Tournament', TournamentSchema);
