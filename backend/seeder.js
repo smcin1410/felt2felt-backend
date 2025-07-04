@@ -1,16 +1,16 @@
-const fs = 'fs'; // This is a placeholder, seeder scripts often don't need fs
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const colors = require('colors');
 
-// Load env vars
-dotenv.config({ path: './config/config.env' });
+// Load env vars from the root .env file
+dotenv.config();
 
 // Load models
 const Location = require('./models/Location');
 const Tournament = require('./models/Tournament');
 
 // Connect to DB
+// This line will now correctly find your MONGO_URI from the .env file
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -29,8 +29,14 @@ const locations = [
     atmosphere: 'Tourist-heavy',
     primaryPlayerType: 'Mixed',
     businessModel: 'Rake-based',
+    loyaltyProgram: 'Caesars Rewards',
+    pokerRateDetails: 'Inquire with the poker room for current rates and play requirements, typically requires 6 hours of play per day.',
     details: {
       tables: 50, // Approximate for the WSOP setup
+      cashGames: [
+          { game: "No-Limit Hold'em", stakes: "$1/$3", maxBuyin: 300 },
+          { game: "No-Limit Hold'em", stakes: "$2/$5", maxBuyin: 1000 }
+      ],
       tournaments: "Home of the World Series of Poker (WSOP)."
     }
   },
@@ -44,10 +50,12 @@ const locations = [
     atmosphere: 'Upscale',
     primaryPlayerType: 'Professional',
     businessModel: 'Rake-based',
+    loyaltyProgram: 'Wynn Rewards',
+    pokerRateDetails: 'The Wynn offers a poker rate on rooms, subject to availability. Contact the poker room directly for details.',
     details: {
       tables: 28,
       cashGames: [
-          { game: "No-Limit Hold'em", stakes: "$1/$3", maxBuyin: 500 },
+           { game: "No-Limit Hold'em", stakes: "$1/$3", maxBuyin: 500 },
           { game: "No-Limit Hold'em", stakes: "$2/$5", maxBuyin: 1500 },
           { game: "Pot-Limit Omaha", stakes: "$1/$2", maxBuyin: 500 }
       ],
@@ -64,6 +72,8 @@ const locations = [
     atmosphere: 'Upscale',
     primaryPlayerType: 'Professional',
     businessModel: 'Rake-based',
+    loyaltyProgram: 'MGM Rewards',
+    pokerRateDetails: 'Aria offers a poker rate for players who log an average of 6 hours of play per day. Book through the poker room.',
     details: {
       tables: 24,
       cashGames: [
@@ -136,7 +146,7 @@ const importData = async () => {
   try {
     await Location.deleteMany();
     await Tournament.deleteMany();
-    
+
     await Location.create(locations);
     await Tournament.create(tournaments);
 
