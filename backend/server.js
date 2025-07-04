@@ -23,7 +23,7 @@ console.log(`-----------------------`);
 
 
 // --- Connect to MongoDB ---
-mongoose.connect(process.env.DATABASE_URL)
+mongoose.connect(process.env.MONGO_URI) // <-- CORRECTED
   .then(() => {
     console.log('Successfully connected to MongoDB Atlas!');
     initScheduledJobs();
